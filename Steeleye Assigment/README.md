@@ -1,70 +1,145 @@
-# Getting Started with Create React App
+Steeleye Assignment : 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+( 1 )  Explain what the simple List component does.
+Ans : The simple List component typically consists of a container element that holds a series of smaller item elements, each of which represents a specific piece of information or action. The items can be text, images, or icons, and they can be organized in a specific order or sorted based on a specific criterion.
 
-## Available Scripts
+In websites, occasionally we want our data to be displayed in ordered format (as it is quite more proficient) and this can be done by using List.
+Overall, the simple List component is a versatile and commonly used user interface element that provides an intuitive way for users to view and interact with data in a structured and organized manner.
+In the below code, List component do the following things :
 
-In the project directory, you can run:
+•	It consists of List Items wrapped in WrappedSingleListItem having state isSelected and values as text and index, and event named onClickHandler, on which further, these are memoized under memo(WrappedListComponent) which basically remembers the arguments that has been passed with the results and if it is passed with same arguments, then thus it will return the result directly from memory.
 
-### `npm start`
+•	It uses map() method, to call a function for each element in that array, and it stores the listed items under array items.
+And side by side the background color of the passed text is changing with respect to  their state, like if state is true(selected list items) it will show green and red for non selected items.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The simple List component often includes features like scrolling, filtering, searching, and pagination, which make it easier for users to navigate through a large set of data. Additionally, the simple List component can be customized to fit the specific needs and branding of a particular application or website.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+( 2 ) What problems / warnings are there with code?
+ANS : 
 
-### `npm test`
+1 . While using useState() the 'set' variable should be after the local variable.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Fixed code:
+const [selectedIndex, setSelectedIndex] = useState();
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Syntax error of PropTypes in WrappedListComponent. It should be arrayOf instead of shapeOf.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Fixed code:
+WrappedListComponent.propTypes = {
+    items: PropTypes.arrayOf(
+        PropTypes.shape({
+            text: PropTypes.string.isRequired
+        })
+    )
+};
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Error in declaring selectedIndex, it was throwing an error of React Hook useEffect has a missing dependency: 'setSelectedIndex'
 
-### `npm run eject`
+            Error:
+            const [setSelectedIndex, selectedIndex] = useState();
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+            Correction:
+            const [selectedIndex, setSelectedIndex] = useState(false);
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4.  As map() method was called and by default it was declared it as null due to which it is throwing an error. Ideally data should be passed from App component but in this case as data is not passed from App component so we can pass data as default prop
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+          Error:
+          WrappedListComponent.defaultProps = {
+                 items: null,
+             };
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+          Correction:
+          WrappedListComponent.defaultProps = {                   
+            items: [
+            { text: "Rishabh Raj" },
+            { text: "12006056” },
+            { text: "BTech CSE (2024)"},
+            { text: "Lovely Professional University”}
+            ],
+            };
 
-## Learn More
+5.  onClickHandler is basically being called as a function here which is why rendered color is always green as it takes value of index initially passed always, instead it should be called as a arrow function.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+            Error:
+            onClick={onClickHandler(index)}
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+            Correction :
+            onClick={()=>onClickHandler(index)}
 
-### Code Splitting
+6.         Error:    
+            const handleClick = index => { setSelectedIndex(index); };
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+            Correction:
+            const handleClick = index => { setSelectedIndex(true); };
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3 . Please fix, optimize, and/or modify the component as much as you think is necessary.
 
-### Making a Progressive Web App
+Code :
+This is the fix and the optimize code : 
+import React, { useState, useEffect, memo } from "react";
+import PropTypes from "prop-types";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+const WrappedSingleListItem = ({ index, isSelected, onClickHandler, text }) => {
+	return (
+		<li
+			style={{ backgroundColor: isSelected ? "green" : "red" }}
+			onClick={onClickHandler(index)}>
+			{text}
+		</li>
+	);
+};
 
-### Advanced Configuration
+WrappedSingleListItem.propTypes = {
+	index: PropTypes.number,
+	isSelected: PropTypes.bool,
+	onClickHandler: PropTypes.func.isRequired,
+	text: PropTypes.string.isRequired,
+};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+const SingleListItem = memo(WrappedSingleListItem);
 
-### Deployment
+// List Component
+const WrappedListComponent = ({ items }) => {
+	const [selectedIndex, setSelectedIndex] = useState();
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+	useEffect(() => {
+		setSelectedIndex(null);
+	}, [items]);
 
-### `npm run build` fails to minify
+	const handleClick = (index) => {
+		setSelectedIndex(index);
+	};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+	return (
+		<ul style={{ textAlign: "left" }}>
+			{items.map((item, index) => (
+				<SingleListItem
+					onClickHandler={() => handleClick(index)}
+					text={item.text}
+					index={index}
+					isSelected={selectedIndex}
+				/>
+			))}
+		</ul>
+	);
+};
+
+WrappedListComponent.propTypes = {
+	items: PropTypes.arrayOf(
+		PropTypes.shape({
+			text: PropTypes.string.isRequired,
+		})
+	),
+};
+
+WrappedListComponent.defaultProps = {
+	items: [{text: " Rishabh Raj "}, {text: "12006056"},{ text:”BTech CSE (2024)"},             { {text: "Lovely Professional University”}
+],
+};
+
+const List = memo(WrappedListComponent);
+
+export default List;
+![image](https://user-images.githubusercontent.com/76212232/233837430-4eec2735-4cd3-4a96-89b3-7f1907fd5a2a.png)
