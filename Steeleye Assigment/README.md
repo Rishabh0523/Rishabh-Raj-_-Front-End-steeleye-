@@ -142,4 +142,4 @@ WrappedListComponent.defaultProps = {
 const List = memo(WrappedListComponent);
 
 export default List;
-![image](https://user-images.githubusercontent.com/76212232/233837430-4eec2735-4cd3-4a96-89b3-7f1907fd5a2a.png)
+
