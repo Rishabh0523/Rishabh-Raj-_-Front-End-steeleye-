@@ -1,3 +1,5 @@
+ASSIGMENT SOLUTIONS :-
+
 ( 1 )  Explain what the simple List component does.
 Ans : The simple List component typically consists of a container element that holds a series of smaller item elements, each of which represents a specific piece of information or action. The items can be text, images, or icons, and they can be organized in a specific order or sorted based on a specific criterion.
 
@@ -72,7 +74,7 @@ WrappedListComponent.propTypes = {
             Correction:
             const handleClick = index => { setSelectedIndex(true) };
 
-3.. Please fix, optimize, and/or modify the component as much as you think is necessary.
+3. fix, optimize, and/or modify the component as much as you think is necessary.
 
 Code :
 This is the fix and the optimize code : 
