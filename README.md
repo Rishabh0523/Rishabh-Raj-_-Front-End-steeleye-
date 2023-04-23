@@ -11,7 +11,7 @@ In the below code, List component do the following things :
 And side by side the background color of the passed text is changing with respect to  their state, like if state is true(selected list items) it will show green and red for non selected items.
 
 The simple List component often includes features like scrolling, filtering, searching, and pagination, which make it easier for users to navigate through a large set of data. Additionally, the simple List component can be customized to fit the specific needs and branding of a particular application or website.
-![image](https://user-images.githubusercontent.com/76212232/233837665-8cbfb618-dc5a-40fe-ae15-0de9d2fa02d5.png)
+
 
 ( 2 ) What problems / warnings are there with code?
 ANS : 
